@@ -1,8 +1,13 @@
 from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
+import logging
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Dummy data for items
 items = [
@@ -10,6 +15,9 @@ items = [
     {"id": 2, "name": "Item 2"},
     {"id": 3, "name": "Item 3"}
 ]
+
+# List to store logs
+log_entries = []
 
 # Serve the index.html file
 @app.route('/')
@@ -39,6 +47,9 @@ def create_item():
     new_item = request.json
     new_item['id'] = len(items) + 1
     items.append(new_item)
+    log_entry = f'Created item: {new_item}'
+    log_entries.append(log_entry)
+    logger.info(log_entry)
     return jsonify(new_item), 201
 
 # PUT /items/<id>
@@ -47,6 +58,9 @@ def update_item(item_id):
     item = next((item for item in items if item['id'] == item_id), None)
     if item:
         item.update(request.json)
+        log_entry = f'Updated item: {item}'
+        log_entries.append(log_entry)
+        logger.info(log_entry)
         return jsonify(item)
     return ('', 404)
 
@@ -55,7 +69,15 @@ def update_item(item_id):
 def delete_item(item_id):
     global items
     items = [item for item in items if item['id'] != item_id]
+    log_entry = f'Deleted item with ID: {item_id}'
+    log_entries.append(log_entry)
+    logger.info(log_entry)
     return ('', 204)
+
+# GET /logs
+@app.route('/logs', methods=['GET'])
+def get_logs():
+    return jsonify(log_entries)
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)  # Running on port 5000
