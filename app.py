@@ -3,12 +3,13 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
-from flask_cors import CORS
 
-app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
-
-app = Flask(__name__)
+# Dummy data for items
+items = [
+    {"id": 1, "name": "Item 1"},
+    {"id": 2, "name": "Item 2"},
+    {"id": 3, "name": "Item 3"}
+]
 
 # Serve the index.html file
 @app.route('/')
