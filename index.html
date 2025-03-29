@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask API</title>
+    <script>
+        async function fetchWelcomeMessage() {
+            const response = await fetch('http://127.0.0.1:5000/welcome');
+
+
+            const data = await response.json();
+            document.getElementById('api-response').innerText = data.message;
+        }
+    </script>
+</head>
+<body>
+    <h1>Welcome to the Flask API</h1>
+    <button onclick="fetchWelcomeMessage()">Get Welcome Message</button>
+    <p id="api-response"></p>
+</body>
+</html>
